@@ -4,7 +4,7 @@ function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
   const loadAdjFuncs = [
     (prevLoad) => prevLoad > 200 ? -10 : -5,
     (prevLoad) => prevLoad > 200 ? -10 : -5,
-    (prevLoad) => prevLoad,
+    (prevLoad) => 0,
     (prevLoad) => prevLoad > 200 ? 10 : 5,
     (prevLoad) => prevLoad > 200 ? 15 : 10
   ];
