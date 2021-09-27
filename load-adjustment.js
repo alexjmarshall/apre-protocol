@@ -3,8 +3,8 @@ function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
   let loadDiff;
   const loadAdjFuncs = [
     (prevLoad) => prevLoad > 200 ? -10 : -5,
-    (prevLoad) => prevLoad > 200 ? -10 : -5,
-    (prevLoad) => 0,
+    (prevLoad) => prevLoad > 200 ? -5 : 0,
+    () => 0,
     (prevLoad) => prevLoad > 200 ? 10 : 5,
     (prevLoad) => prevLoad > 200 ? 15 : 10
   ];
