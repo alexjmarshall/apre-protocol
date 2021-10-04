@@ -37,3 +37,15 @@ function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
   if(loadDiff % increment) loadDiff = Math.floor(loadDiff / increment) * increment;
   return prevLoad + loadDiff;
 }
+
+function exertionalLoad(load, reps, rir=0) {
+  if(!load || isNaN(load) ||
+    !reps || isNaN(reps) ||
+    isNaN(rir)) return;
+  let xl = 0;
+  for(let i = 1; i <= reps; i++) {
+    xl += load*Math.pow(2.71828,-0.215 * (reps + rir - i));
+  }
+
+  return Math.round(xl);
+}
