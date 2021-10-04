@@ -1,5 +1,7 @@
-function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
-  if(!prevLoad || isNaN(prevLoad) || !prevReps || isNaN(prevReps)) return;
+function adjustedLoad(prevLoad, prevReps, protocolKey, increment=5) {
+  if(!prevLoad?.toString().length || isNaN(prevLoad) ||
+    !prevReps?.toString().length || isNaN(prevReps) ||
+    isNaN(increment)) return;
   let loadDiff;
   const loadAdjFuncs = [
     (prevLoad) => prevLoad > 200 ? -10 : -5,
@@ -39,8 +41,8 @@ function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
 }
 
 function exertionLoad(load, reps, rir=0) {
-  if(!load || isNaN(load) ||
-    !reps || isNaN(reps) ||
+  if(!load?.toString().length || isNaN(load) ||
+    !reps?.toString().length || isNaN(reps) ||
     isNaN(rir)) return;
   let xl = 0;
   for(let i = 1; i <= reps; i++) {
