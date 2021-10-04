@@ -38,7 +38,7 @@ function adjustedLoad(prevLoad, prevReps, protocolKey, increment = 5) {
   return prevLoad + loadDiff;
 }
 
-function exertionalLoad(load, reps, rir=0) {
+function exertionLoad(load, reps, rir=0) {
   if(!load || isNaN(load) ||
     !reps || isNaN(reps) ||
     isNaN(rir)) return;
