@@ -57,10 +57,16 @@ function adjustedLoad(prevLoad, prevReps, routineKey, increment=5) {
 function exertionLoad(load, reps, rir=0) {
 
   let xl = 0;
-  
+
   for(let i = 1; i <= reps; i++) {
     xl += load*Math.pow(2.71828, -0.215 * (reps + rir - i));
   }
 
   return Math.round(xl);
+}
+
+
+function epley1RM(load, reps) {
+  
+  return Math.round(load * (1 + reps / 30));
 }
