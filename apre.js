@@ -1,52 +1,65 @@
-function adjustedLoad(prevLoad, prevReps, protocolKey, increment=5) {
-  if(!prevLoad?.toString().length || isNaN(prevLoad) ||
-    !prevReps?.toString().length || isNaN(prevReps) ||
-    isNaN(increment)) return;
-  let loadDiff;
-  const loadAdjFuncs = [
-    (prevLoad) => prevLoad > 200 ? -10 : -5,
-    (prevLoad) => prevLoad > 200 ? -5 : 0,
-    () => 0,
-    (prevLoad) => prevLoad > 200 ? 10 : 5,
-    (prevLoad) => prevLoad > 200 ? 15 : 10
-  ];
-  const range = (start, stop) => {
-    const arr = new Array(stop - start + 1)
-    for(let i = 0; i < arr.length; i++){
-       arr[i] = start++;
-    }
-    return arr;
-  };
-  const threeRMRanges = () => [ [1], [2], [3,4], [5,6], range(7,99) ];
-  const sixRMRanges = () => [ [1,2], [3,4], range(5,7), range(8,12), range(13,99) ];
-  const tenRMRanges = () => [ range(1,6), [7,8], range(9,11), range(12,16), range(17,99) ];
-  const fifteenRMRanges = () => [ range(1,9), range(10,12), range(13,17), range(18,24), range(25,99) ];
-  const protocols = {
-    "3RM": () => new Map(threeRMRanges().map((r,i) => [ r,loadAdjFuncs[i] ])),
-    "6RM": () => new Map(sixRMRanges().map((r,i) => [ r,loadAdjFuncs[i] ])),
-    "10RM": () => new Map(tenRMRanges().map((r,i) => [ r,loadAdjFuncs[i] ])),
-    "15RM": () => new Map(fifteenRMRanges().map((r,i) => [ r,loadAdjFuncs[i] ]))
-  };
+function adjustedLoad(prevLoad, prevReps, routineKey, increment=5) {
 
- const protocol = protocols[protocolKey]();
-  for(const range of protocol.keys()) {
-    if(range.includes(prevReps)) {
-      loadDiff = protocol.get(range)(prevLoad);
+  let loadDiff;
+  const loadAdj = (high, low) => {
+
+    return (prevLoad) => prevLoad > 200 ? high : low;
+  }
+  const none = () => 0;
+
+  const routines = {
+    "3RM": [
+      [1, loadAdj(-10, -5)],
+      [2, loadAdj(-5, 0)],
+      [4, none],
+      [6, loadAdj(10, 5)],
+      [99, loadAdj(15, 10)]
+    ],
+    "6RM": [
+      [2, loadAdj(-15, -10)],
+      [4, loadAdj(-10, -5)],
+      [7, none],
+      [12, loadAdj(10, 5)],
+      [99, loadAdj(15, 10)]
+    ],
+    "10RM": [
+      [6, loadAdj(-10, -5)],
+      [8, loadAdj(-5, 0)],
+      [11, none],
+      [16, loadAdj(10, 5)],
+      [99, loadAdj(15, 10)]
+    ],
+    "15RM": [
+      [9, loadAdj(-10, -5)],
+      [12, loadAdj(-5, 0)],
+      [16, none],
+      [24, loadAdj(10, 5)],
+      [99, loadAdj(15, 10)]
+    ],
+  }
+
+  const routine = routines[routineKey];
+
+  for(const maxAndAdj of routine) {
+    if(prevReps <= maxAndAdj[0]) {
+      loadDiff = maxAndAdj[1](prevLoad);
       break;
     }
   }
 
-  if(loadDiff % increment) loadDiff = Math.floor(loadDiff / increment) * increment;
-  return prevLoad + loadDiff;
+  if (loadDiff % increment) loadDiff = Math.floor(loadDiff / increment) * increment;
+  const adjustLoad = prevLoad + loadDiff;
+
+  return adjustLoad;
 }
 
+
 function exertionLoad(load, reps, rir=0) {
-  if(!load?.toString().length || isNaN(load) ||
-    !reps?.toString().length || isNaN(reps) ||
-    isNaN(rir)) return;
+
   let xl = 0;
+  
   for(let i = 1; i <= reps; i++) {
-    xl += load*Math.pow(2.71828,-0.215 * (reps + rir - i));
+    xl += load*Math.pow(2.71828, -0.215 * (reps + rir - i));
   }
 
   return Math.round(xl);
