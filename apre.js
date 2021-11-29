@@ -1,4 +1,4 @@
-function adjustedLoad(prevLoad, prevReps, routineKey, increment=5) {
+function adjustedLoad(prevLoad=0, prevReps=10, routineKey="10RM", increment=5) {
 
   let loadDiff;
   const loadAdj = (high, low) => {
@@ -54,7 +54,7 @@ function adjustedLoad(prevLoad, prevReps, routineKey, increment=5) {
 }
 
 
-function exertionLoad(load, reps, rir=0) {
+function exertionLoad(load=0, reps=0, rir=0) {
 
   let xl = 0;
 
@@ -66,7 +66,7 @@ function exertionLoad(load, reps, rir=0) {
 }
 
 
-function epley1RM(load, reps) {
+function epley1RM(load=0, reps=0) {
   
   return Math.round(load * (1 + reps / 30));
 }
