@@ -70,3 +70,32 @@ function epley1RM(load=0, reps=0) {
   
   return Math.round(load * (1 + reps / 30));
 }
+
+function loadAdj(prevLoad, prevRepsArr=[[]], type='MJ', increment=5) {
+  prevRepsArr = prevRepsArr[0];
+  type = String(type).toUpperCase();
+  const validTypes = ['MJ', 'SJ'];
+
+  if ( prevLoad === '' || prevRepsArr.every(v => v === '')  || !validTypes.includes(type) ) {
+    return prevLoad;
+  }
+
+  const repTargets = {
+    'MJ': {
+      min: 6,
+      max: 10
+    },
+    'SJ': {
+      min: 8,
+      max: 15
+    }
+  };
+
+  const maxReps = repTargets[type].max;
+  const minReps = repTargets[type].min;
+  const newLoad = prevRepsArr.some(v => v < minReps) ? prevLoad - increment :
+                  prevRepsArr.some(v => v >= maxReps) ? prevLoad + increment :
+                  prevLoad;
+
+  return newLoad;
+}
