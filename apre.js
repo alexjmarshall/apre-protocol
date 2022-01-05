@@ -1,56 +1,33 @@
-function adjustedLoad(prevLoad=0, prevReps=10, routineKey="10RM", increment=5) {
-
-  let loadDiff;
-  const loadAdj = (high, low) => {
-
-    return (prevLoad) => prevLoad > 200 ? high : low;
+function adjustedLoad (prevLoad, prevReps, routineKey, increment=10) {
+  if ( prevLoad === '' || prevReps === '' ) {
+    return prevLoad;
   }
-  const none = () => 0;
 
   const routines = {
-    "3RM": [
-      [1, loadAdj(-10, -5)],
-      [2, loadAdj(-5, 0)],
-      [4, none],
-      [6, loadAdj(10, 5)],
-      [99, loadAdj(15, 10)]
-    ],
-    "6RM": [
-      [2, loadAdj(-15, -10)],
-      [4, loadAdj(-10, -5)],
-      [7, none],
-      [12, loadAdj(10, 5)],
-      [99, loadAdj(15, 10)]
-    ],
-    "10RM": [
-      [6, loadAdj(-10, -5)],
-      [8, loadAdj(-5, 0)],
-      [11, none],
-      [16, loadAdj(10, 5)],
-      [99, loadAdj(15, 10)]
-    ],
-    "15RM": [
-      [9, loadAdj(-10, -5)],
-      [12, loadAdj(-5, 0)],
-      [16, none],
-      [24, loadAdj(10, 5)],
-      [99, loadAdj(15, 10)]
-    ],
-  }
+    "3RM": [10,7,5,3,2],
+    "6RM": [13,10,8,5,3],
+    "10RM": [18,15,13,9,7],
+    "15RM": [25,21,18,13,10],
+  };
 
   const routine = routines[routineKey];
 
-  for(const maxAndAdj of routine) {
-    if(prevReps <= maxAndAdj[0]) {
-      loadDiff = maxAndAdj[1](prevLoad);
-      break;
-    }
+  if (!routine) {
+    return prevLoad;
   }
 
-  if (loadDiff % increment) loadDiff = Math.floor(loadDiff / increment) * increment;
-  const adjustLoad = prevLoad + loadDiff;
+  let incFactor = 3;
 
-  return adjustLoad;
+  for (const repTarget of routine) {
+    if (prevReps >= repTarget) {
+      const adjLoad = prevLoad + (increment * incFactor);
+      return adjLoad;
+    }
+    incFactor--;
+  }
+
+  const adjLoad = prevLoad + (increment * incFactor);
+  return adjLoad;
 }
 
 
